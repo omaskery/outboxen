@@ -1,4 +1,4 @@
-module outbox
+module github.com/omaskery/outboxen
 
 go 1.16
 
