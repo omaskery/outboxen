@@ -1,6 +1,6 @@
 # outboxen
 
-Outboxen is a library for implementing the [transactional outbox pattern](transactional-outbox-pattern) in Go.
+Outboxen is a library for implementing the [transactional outbox pattern][transactional-outbox-pattern] in Go.
 
 I found that there weren't many libraries for implementing this in Go, and the ones that did exist made
 different design trade-offs than I would make.
@@ -11,7 +11,7 @@ different design trade-offs than I would make.
   * A way to atomically claim entries in storage for a given processor
   * A way to retrieve entries claimed by a given processor
   * A way to delete entries
-* Compatible with horizontal scalability
+* Compatible with horizontal scaling
   * Safely claims outbox entries for publishing, with a deadline for gracefully tolerating failures
 * Designed not to interfere with the _transactional_ part of "transactional outbox pattern"
   * It does not create transactions for you 
