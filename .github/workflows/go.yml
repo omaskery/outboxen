@@ -1,4 +1,4 @@
-name: Go
+name: Go Build & Test
 
 on:
   push:
@@ -18,8 +18,11 @@ jobs:
       with:
         go-version: 1.16
 
-    - name: Build
-      run: go build -v ./...
+    - name: Ensure go.mod is tidy
+      run: go mod tidy && git diff --exit-code go.mod go.sum
+      
+    - name: Vet Go code
+      run: go vet ./...
 
-    - name: Test
-      run: go test -v -ginkgo.v -ginkgo.progress ./...
+    - name: Run tests
+      run: ginkgo -r --randomizeAllSpecs --randomizeSuites --race --trace
