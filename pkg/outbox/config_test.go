@@ -7,8 +7,8 @@ import (
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 
-	"outbox/pkg/fake"
-	"outbox/pkg/outbox"
+	"github.com/omaskery/outboxen/pkg/fake"
+	"github.com/omaskery/outboxen/pkg/outbox"
 )
 
 var _ = Describe("Config", func() {

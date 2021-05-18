@@ -12,8 +12,8 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"outbox/pkg/fake"
-	"outbox/pkg/outbox"
+	"github.com/omaskery/outboxen/pkg/fake"
+	"github.com/omaskery/outboxen/pkg/outbox"
 )
 
 var _ = Describe("Outbox", func() {

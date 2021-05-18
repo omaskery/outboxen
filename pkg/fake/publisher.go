@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-logr/logr"
 
-	"outbox/pkg/outbox"
+	"github.com/omaskery/outboxen/pkg/outbox"
 )
 
 // Publisher is a simple in-memory fake for publishing messages. As it doesn't actually

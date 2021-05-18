@@ -91,7 +91,7 @@ func (o *Outbox) StartProcessing(ctx context.Context) error {
 }
 
 // PumpOutbox causes the Outbox to process entries immediately. This is typically not called directly,
-// instead calaled from StartProcessing. However, this is exposed partially for ease of testing, but
+// instead called from StartProcessing. However, this is exposed partially for ease of testing, but
 // also to facilitate customising the processing logic if the provided StartProcessing function isn't
 // suitable for your application.
 func (o *Outbox) PumpOutbox(ctx context.Context) (err error) {
@@ -102,10 +102,27 @@ func (o *Outbox) PumpOutbox(ctx context.Context) (err error) {
 		return fmt.Errorf("error claiming entries: %w", err)
 	}
 
+	for {
+		more, err := o.processBatch(ctx)
+		if err != nil {
+			return fmt.Errorf("error processing batch of outbox entries: %w", err)
+		}
+
+		if !more {
+			break
+		}
+	}
+
+	return nil
+}
+
+func (o *Outbox) processBatch(ctx context.Context) (more bool, err error) {
 	entries, err := o.config.Storage.GetClaimedEntries(ctx, o.config.ProcessorID, o.config.BatchSize)
 	if err != nil {
-		return fmt.Errorf("error getting claimed entries: %w", err)
+		return false, fmt.Errorf("error getting claimed entries: %w", err)
 	}
+
+	more = len(entries) >= o.config.BatchSize
 
 	entryIDs := make([]string, 0, len(entries))
 	messages := make([]Message, 0, len(entries))
@@ -141,8 +158,8 @@ func (o *Outbox) PumpOutbox(ctx context.Context) (err error) {
 	}()
 
 	if err := o.config.Publisher.Publish(ctx, messages...); err != nil {
-		return fmt.Errorf("error publishing: %w", err)
+		return more, fmt.Errorf("error publishing: %w", err)
 	}
 
-	return nil
+	return more, nil
 }

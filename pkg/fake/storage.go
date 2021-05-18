@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"outbox/pkg/outbox"
+	"github.com/omaskery/outboxen/pkg/outbox"
 
 	"github.com/google/uuid"
 )
