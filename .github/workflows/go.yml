@@ -23,6 +23,9 @@ jobs:
       
     - name: Vet Go code
       run: go vet ./...
-
+      
+    - name: Install ginkgo tooling
+      run: go install github.com/onsi/ginkgo/ginkgo
+    
     - name: Run tests
-      run: ginkgo -r --randomizeAllSpecs --randomizeSuites --race --trace
+      run: ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending --cover --trace --race --progress
