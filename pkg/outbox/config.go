@@ -18,19 +18,19 @@ var (
 type Config struct {
 	// Clock abstracts interactions with the time package, defaults to a real clock implementation
 	Clock Clock
-	// Storage allows the processing task to claim, retrieve and delete Entry objects
+	// Storage allows the processing task to claim, retrieve and delete ClaimedEntry objects
 	Storage ProcessorStorage
-	// Publisher is used to publish Message objects, made from Entry objects, pulled from ProcessorStorage
+	// Publisher is used to publish Message objects, made from ClaimedEntry objects, pulled from ProcessorStorage
 	Publisher Publisher
 	// ProcessInterval specifies how long the processor should spend idle without checking for work, this
 	// is reset if Outbox.WakeProcessor is called
 	ProcessInterval time.Duration
-	// ClaimDuration specifies how long the processor will claim Entry objects in ProcessorStorage
+	// ClaimDuration specifies how long the processor will claim ClaimedEntry objects in ProcessorStorage
 	ClaimDuration time.Duration
 	// ProcessorID is a unique identifier for any instance of the outbox, so a horizontally scaled app
-	// can run many Outbox instances, each claiming Entry objects and publishing them
+	// can run many Outbox instances, each claiming ClaimedEntry objects and publishing them
 	ProcessorID string
-	// BatchSize indicates how many Entry objects to attempt to retrieve & publish in one go
+	// BatchSize indicates how many ClaimedEntry objects to attempt to retrieve & publish in one go
 	BatchSize int
 	// Logger can be provided to receive logging output
 	Logger logr.Logger
