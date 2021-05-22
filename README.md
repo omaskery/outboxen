@@ -30,4 +30,4 @@ example [here][outboxen-gorm-example].
 
 [gorm]: https://gorm.io/
 
-[outboxen-gorm-example]: https://github.com/omaskery/outboxen-gorm/examples/mysql
+[outboxen-gorm-example]: https://github.com/omaskery/outboxen-gorm/tree/main/examples/mysql
