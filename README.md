@@ -1,5 +1,7 @@
 # outboxen
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/omaskery/outboxen.svg)](https://pkg.go.dev/github.com/omaskery/outboxen)
+
 Outboxen is a library for implementing the [transactional outbox pattern][transactional-outbox-pattern] in Go.
 
 I found that there weren't many libraries for implementing this in Go, and the ones that did exist made different design
