@@ -54,8 +54,8 @@ func (o *Outbox) WakeProcessor() {
 
 // Publish publishes the provided messages to the outbox, and will be forwarded to the configured Publisher during
 // one of the subsequent PumpOutbox calls
-func (o *Outbox) Publish(ctx context.Context, messages ...Message) error {
-	return o.config.Storage.Publish(ctx, messages...)
+func (o *Outbox) Publish(ctx context.Context, txn interface{}, messages ...Message) error {
+	return o.config.Storage.Publish(ctx, txn, messages...)
 }
 
 // StartProcessing blocks, processing the outbox until its context is cancelled.

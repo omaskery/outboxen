@@ -35,7 +35,7 @@ type EntryStorage struct {
 }
 
 // Publish records the provided messages to the outbox.ProcessorStorage
-func (e *EntryStorage) Publish(_ context.Context, messages ...outbox.Message) error {
+func (e *EntryStorage) Publish(_ context.Context, _ interface{}, messages ...outbox.Message) error {
 	e.lock.Lock()
 	defer e.lock.Unlock()
 

@@ -31,10 +31,7 @@ type ProcessorStorage interface {
 	// DeleteEntries deletes the entries as specified by their ClaimedEntry.ID
 	DeleteEntries(ctx context.Context, entryIDs ...string) error
 	// Publish creates new outbox entries containing the provided messages, to be published as soon as possible
-	// Note that it is expected that the underlying ProcessorStorage implementation extracts information about the
-	// current transaction from the ctx argument, so that writing to the outbox is transactionally consistent with
-	// the state change that caused the publish event.
-	Publish(ctx context.Context, messages ...Message) error
+	Publish(ctx context.Context, txn interface{}, messages ...Message) error
 }
 
 // Message is what will be published over some pubsub/streaming system

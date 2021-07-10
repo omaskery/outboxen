@@ -120,7 +120,7 @@ var _ = Describe("Outbox", func() {
 					}
 
 					logger.Info("storing a message in the outbox")
-					Expect(storage.Publish(ctx, testMessage)).To(Succeed())
+					Expect(storage.Publish(ctx, nil, testMessage)).To(Succeed())
 				})
 
 				It("publishes the message", func() {
@@ -163,7 +163,7 @@ var _ = Describe("Outbox", func() {
 			When("a message is published", func() {
 				JustBeforeEach(func() {
 					logger.Info("publishing a message")
-					Expect(ob.Publish(ctx, outbox.Message{})).To(Succeed())
+					Expect(ob.Publish(ctx, nil, outbox.Message{})).To(Succeed())
 				})
 
 				It("publishes after the processing interval", func() {
