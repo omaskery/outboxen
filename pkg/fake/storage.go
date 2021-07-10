@@ -127,3 +127,5 @@ func (e *EntryStorage) CountEntries() int {
 
 	return len(e.entries)
 }
+
+var _ outbox.ProcessorStorage = (*EntryStorage)(nil)

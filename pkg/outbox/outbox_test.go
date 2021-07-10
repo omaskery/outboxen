@@ -100,6 +100,7 @@ var _ = Describe("Outbox", func() {
 
 		When("the outbox is pumped manually", func() {
 			JustBeforeEach(func() {
+				logger.Info("manually pumping outbox")
 				Expect(ob.PumpOutbox(ctx)).To(Succeed())
 			})
 
@@ -118,6 +119,7 @@ var _ = Describe("Outbox", func() {
 						Payload: []byte("test-payload"),
 					}
 
+					logger.Info("storing a message in the outbox")
 					Expect(storage.Publish(ctx, testMessage)).To(Succeed())
 				})
 
@@ -159,8 +161,9 @@ var _ = Describe("Outbox", func() {
 			})
 
 			When("a message is published", func() {
-				BeforeEach(func() {
-					Expect(storage.Publish(ctx, outbox.Message{})).To(Succeed())
+				JustBeforeEach(func() {
+					logger.Info("publishing a message")
+					Expect(ob.Publish(ctx, outbox.Message{})).To(Succeed())
 				})
 
 				It("publishes after the processing interval", func() {
@@ -180,6 +183,7 @@ var _ = Describe("Outbox", func() {
 
 				When("the wake signal is raised", func() {
 					JustBeforeEach(func() {
+						logger.Info("waking the processor")
 						ob.WakeProcessor()
 					})
 
