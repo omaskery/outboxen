@@ -16,6 +16,7 @@ type Clock interface {
 }
 
 type outboxEntry struct {
+	Namespace          string
 	ID                 string
 	Key                []byte
 	Payload            []byte
@@ -35,15 +36,18 @@ type EntryStorage struct {
 }
 
 // Publish records the provided messages to the outbox.ProcessorStorage
-func (e *EntryStorage) Publish(_ context.Context, _ interface{}, messages ...outbox.Message) error {
+func (e *EntryStorage) Publish(ctx context.Context, _ interface{}, messages ...outbox.Message) error {
 	e.lock.Lock()
 	defer e.lock.Unlock()
 
+	namespace := outbox.NamespaceFromContext(ctx)
+
 	for _, message := range messages {
 		e.entries = append(e.entries, &outboxEntry{
-			ID:      uuid.NewString(),
-			Key:     message.Key,
-			Payload: message.Payload,
+			Namespace: namespace,
+			ID:        uuid.NewString(),
+			Key:       message.Key,
+			Payload:   message.Payload,
 		})
 	}
 
@@ -81,9 +85,10 @@ func (e *EntryStorage) GetClaimedEntries(_ context.Context, processorID string, 
 		}
 
 		entries = append(entries, outbox.ClaimedEntry{
-			ID:      entry.ID,
-			Key:     entry.Key,
-			Payload: entry.Payload,
+			Namespace: entry.Namespace,
+			ID:        entry.ID,
+			Key:       entry.Key,
+			Payload:   entry.Payload,
 		})
 
 		if len(entries) >= batchSize {
