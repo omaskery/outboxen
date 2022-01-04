@@ -4,6 +4,8 @@ import (
 	"context"
 )
 
+type settingsKey struct{}
+
 // ContextSettings are settings that can configure outbox behaviour through context
 type ContextSettings struct {
 	Namespace string
@@ -15,11 +17,11 @@ func (c ContextSettings) Clone() *ContextSettings {
 }
 
 func settingsFromContext(ctx context.Context) *ContextSettings {
-	return ctx.Value(ContextSettings{}).(*ContextSettings)
+	return ctx.Value(settingsKey{}).(*ContextSettings)
 }
 
 func contextWithSettings(ctx context.Context, newCtx ContextSettings) context.Context {
-	return context.WithValue(ctx, ContextSettings{}, &newCtx)
+	return context.WithValue(ctx, settingsKey{}, &newCtx)
 }
 
 func augmentContextSettings(ctx context.Context, f func(c *ContextSettings)) context.Context {
