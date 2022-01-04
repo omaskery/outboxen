@@ -5,8 +5,8 @@ go 1.16
 require (
 	github.com/cenkalti/backoff v2.2.1+incompatible
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/go-logr/logr v0.4.0
-	github.com/go-logr/zapr v0.4.0
+	github.com/go-logr/logr v1.2.2
+	github.com/go-logr/zapr v1.2.2
 	github.com/google/uuid v1.3.0
 	github.com/jonboulle/clockwork v0.2.2
 	github.com/onsi/ginkgo v1.16.5
