@@ -131,13 +131,16 @@ func (o *Outbox) processBatch(ctx context.Context) (more bool, err error) {
 	more = len(entries) >= o.config.BatchSize
 
 	entryIDs := make([]string, 0, len(entries))
-	messages := make([]Message, 0, len(entries))
+	namespaced := make(map[string][]Message)
 	for _, entry := range entries {
 		entryIDs = append(entryIDs, entry.ID)
-		messages = append(messages, Message{
+
+		msg := Message{
 			Key:     entry.Key,
 			Payload: entry.Payload,
-		})
+		}
+
+		namespaced[entry.Namespace] = append(namespaced[entry.Namespace], msg)
 	}
 
 	defer func() {
@@ -163,8 +166,12 @@ func (o *Outbox) processBatch(ctx context.Context) (more bool, err error) {
 		}
 	}()
 
-	if err := o.config.Publisher.Publish(ctx, messages...); err != nil {
-		return more, fmt.Errorf("error publishing: %w", err)
+	for namespace, messages := range namespaced {
+		publishCtx := WithNamespace(ctx, namespace)
+
+		if err := o.config.Publisher.Publish(publishCtx, messages...); err != nil {
+			return more, fmt.Errorf("error publishing: %w", err)
+		}
 	}
 
 	return more, nil

@@ -19,6 +19,8 @@ import (
 var _ = Describe("Outbox", func() {
 	var logger logr.Logger
 
+	const testNamespace = "test-namespace"
+
 	BeforeEach(func() {
 		zapLogger := zap.New(zapcore.NewCore(
 			zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig()),
@@ -119,13 +121,16 @@ var _ = Describe("Outbox", func() {
 						Payload: []byte("test-payload"),
 					}
 
+					ctx = outbox.WithNamespace(ctx, testNamespace)
+
 					logger.Info("storing a message in the outbox")
 					Expect(storage.Publish(ctx, nil, testMessage)).To(Succeed())
 				})
 
 				It("publishes the message", func() {
 					Expect(publisher.GetPublished()).To(ConsistOf(fake.PublishedMessage{
-						Message: testMessage,
+						Message:   testMessage,
+						Namespace: testNamespace,
 					}))
 				})
 
@@ -164,6 +169,8 @@ var _ = Describe("Outbox", func() {
 
 			When("a message is published", func() {
 				JustBeforeEach(func() {
+					ctx = outbox.WithNamespace(ctx, testNamespace)
+
 					logger.Info("publishing a message")
 					Expect(ob.Publish(ctx, nil, outbox.Message{})).To(Succeed())
 				})
@@ -181,6 +188,13 @@ var _ = Describe("Outbox", func() {
 					Eventually(func() int {
 						return publisher.GetPublishedCount()
 					}).Should(BeNumerically("==", 1))
+
+					Expect(publisher.GetPublished()[0]).To(Equal(
+						fake.PublishedMessage{
+							Message:   outbox.Message{},
+							Namespace: testNamespace,
+						}),
+					)
 				})
 
 				When("the wake signal is raised", func() {
