@@ -95,7 +95,7 @@ var _ = Describe("Outbox", func() {
 			}()
 
 			cancel()
-			Eventually(errChan, 1 * time.Second).Should(Receive(nil))
+			Eventually(errChan, 1*time.Second).Should(Receive(nil))
 		})
 
 		When("the outbox is pumped manually", func() {
@@ -124,7 +124,9 @@ var _ = Describe("Outbox", func() {
 				})
 
 				It("publishes the message", func() {
-					Expect(publisher.GetPublished()).To(ConsistOf(testMessage))
+					Expect(publisher.GetPublished()).To(ConsistOf(fake.PublishedMessage{
+						Message: testMessage,
+					}))
 				})
 
 				It("clears the outbox", func() {
@@ -157,7 +159,7 @@ var _ = Describe("Outbox", func() {
 
 			JustAfterEach(func() {
 				cancel()
-				Eventually(errChan, 1 * time.Second).Should(Receive(nil))
+				Eventually(errChan, 1*time.Second).Should(Receive(nil))
 			})
 
 			When("a message is published", func() {

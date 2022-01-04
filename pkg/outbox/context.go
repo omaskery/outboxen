@@ -17,7 +17,12 @@ func (c ContextSettings) Clone() *ContextSettings {
 }
 
 func settingsFromContext(ctx context.Context) *ContextSettings {
-	return ctx.Value(settingsKey{}).(*ContextSettings)
+	settings, ok := ctx.Value(settingsKey{}).(*ContextSettings)
+	if !ok {
+		return nil
+	}
+
+	return settings
 }
 
 func contextWithSettings(ctx context.Context, newCtx ContextSettings) context.Context {
