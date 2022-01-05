@@ -14,6 +14,8 @@ type Clock interface {
 
 // ClaimedEntry is an entry in the Outbox
 type ClaimedEntry struct {
+	// Namespace is an identifier used to group outbox entries, e.g. for choosing what topics to route entries to
+	Namespace string
 	// ID is a unique identifier for any given Outbox ClaimedEntry, typically a database primary key
 	ID string
 	// Key to be included in the published Message
@@ -31,6 +33,7 @@ type ProcessorStorage interface {
 	// DeleteEntries deletes the entries as specified by their ClaimedEntry.ID
 	DeleteEntries(ctx context.Context, entryIDs ...string) error
 	// Publish creates new outbox entries containing the provided messages, to be published as soon as possible
+	// Note: implementations should consult the context for additional ContextSettings, e.g. namespace
 	Publish(ctx context.Context, txn interface{}, messages ...Message) error
 }
 
@@ -51,6 +54,7 @@ type Message struct {
 type Publisher interface {
 	// Publish attempts to write the given messages to a destination. It may return a PublishError
 	// to indicate which messages were published successfully.
+	// Note: implementations should consult the context for additional ContextSettings, e.g. namespace
 	Publish(ctx context.Context, messages ...Message) error
 }
 
